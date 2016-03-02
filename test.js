@@ -23,12 +23,14 @@ app.get('/foo', function(req, res) {
   console.assert(req.query['age'] === '23');
   console.assert(req.param('name') === 'tim');
   console.assert(req.param('age') === '23');
+  console.assert(res.headersSent === false);
   res.end('bar');
+  console.assert(res.headersSent === true);
 });
 
 app.post('/fiz', function(req, res) {
   console.assert(req.param.foo === 'bar');
-  res.end('biz');
+  res.send('biz');
 });
 
 app.put('/status', function(req, res) {
