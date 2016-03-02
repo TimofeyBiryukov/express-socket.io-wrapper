@@ -82,5 +82,9 @@ ESWrapper will:
 * browser & node clients
 * support for bodyParser
 
+## Credits
+
+This was definitely expired by [sails.js](http://sailsjs.org) a great MVC framework, if you are looking for "all-in-one" solution, you should check them out.
+
 
 ### Have a nice Hacking
