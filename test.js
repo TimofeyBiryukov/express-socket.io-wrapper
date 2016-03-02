@@ -31,6 +31,10 @@ app.post('/fiz', function(req, res) {
   res.end('biz');
 });
 
+app.put('/status', function(req, res) {
+  res.status(201).end('ok');
+});
+
 
 console.log(`->Server listening on port:${PORT}`);
 
@@ -59,10 +63,17 @@ socketClient.on('connect', function() {
     body: {}
   });
 
+  socketClient.emit('request', {
+    path: '/status',
+    method: 'PUT',
+    headers: {},
+    body: {}
+  });
+
   socketClient.on('response', (res) => {
     console.log('[socket] Got response: ', res.body, res.statusCode);
-    console.assert(res.statusCode === 200);
-    console.assert(res.body === 'bar' || res.body === 'biz');
+    console.assert(res.statusCode === 200 || res.statusCode === 201);
+    console.assert(res.body === 'bar' || res.body === 'biz' || res.body === 'ok');
   });
 
 
