@@ -1,0 +1,2 @@
+--strict
+--exclude_files=./test.js
