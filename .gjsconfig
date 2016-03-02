@@ -1,2 +1,2 @@
 --strict
---exclude_files=./test.js
+--exclude_files=test.js
