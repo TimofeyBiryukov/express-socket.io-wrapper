@@ -15,3 +15,4 @@ ESWrapper will:
 TODO:
 
 * common sessions
+* browser & node clients
