@@ -1,13 +1,12 @@
 {
   "name": "es-wrapper",
   "version": "0.0.1",
-  "description": "",
+  "description": "ESWrapper makes your express.js powered API accessible through real-time sockets with Socket.io.",
   "main": "index.js",
   "scripts": {
     "test": "node test"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Timofey Biryukov <timofeybiryukov@gmail.com>",
   "devDependencies": {
     "express": "4.13.4",
     "request": "^2.69.0",
