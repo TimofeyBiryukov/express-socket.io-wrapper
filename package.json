@@ -1,5 +1,5 @@
 {
-  "name": "express-socket.io-wrapper",
+  "name": "es-wrapper",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
