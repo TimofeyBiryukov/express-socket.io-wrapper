@@ -2,6 +2,8 @@
 
 var express = require('express');
 var ESWrapper = require('./index');
+
+var request = require('request');
 var SocketClient = require('socket.io-client');
 
 var PORT = 1334;
@@ -32,12 +34,17 @@ app.post('/fiz', function(req, res) {
 
 console.log(`->Server listening on port:${PORT}`);
 
+
 var socketClient = new SocketClient(`http://localhost:${PORT}`);
 socketClient.on('connect', function() {
 
   console.log('--> Client Connected');
   console.log(' ');
 
+
+  /**
+   * Socket tests
+   */
   socketClient.emit('request', {
     path: '/foo?name=tim&age=23',
     method: 'GET',
@@ -53,13 +60,25 @@ socketClient.on('connect', function() {
   });
 
   socketClient.on('response', (res) => {
-    console.log(res);
+    console.log('[socket] Got response: ', res.body, res.statusCode);
     console.assert(res.statusCode === 200);
     console.assert(res.body === 'bar' || res.body === 'biz');
   });
 
-});
 
-socketClient.on('event', (res) => console.log(res));
-socketClient.on('error', () => console.log('Error'));
+  /**
+   * http tests
+   */
+  request('http://localhost:1334/foo?name=tim&age=23', function(err, res, body) {
+    if (err) {
+      throw err;
+    }
+
+    console.log('[http] Got response: ', body, res.statusCode);
+
+    console.assert(res.statusCode === 200);
+    console.assert(res.body === 'bar');
+  });
+
+});
 
