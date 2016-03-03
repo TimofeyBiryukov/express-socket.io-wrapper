@@ -5,7 +5,7 @@ var ESWrapper = require('./index');
 
 var request = require('request');
 var SocketClient = require('socket.io-client');
-var IOFactory = require('./client/io.js');
+var IOFactory = ESWrapper.IOFactory;
 
 var PORT = 1334;
 

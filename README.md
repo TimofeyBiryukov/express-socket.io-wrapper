@@ -93,6 +93,34 @@ Separate socket logic & http. Req will have `isSocket: true` value and `socketIO
         });
 
 
+## wrapper.client.io.js
+
+Another alternative is to use wrapper.client.io.js. It is small wrapper to provide REST methods and callbacks, to better emulate REST http API.
+
+> wrapper.client.io.js can be used both in node.js and browser
+
+<!--node:-->
+
+<!--var ESWrapper = require('es-wrapper');-->
+<!--var wrapperClient = ESWrapper.IOFactory;-->
+<!--var SocketClient = require('socket.io-client');-->
+
+<!--var io = new IOFactory(SocketClient);-->
+
+<!--io.-->
+ 
+        var wrapperIO = new IOFactory();
+        
+        wrapperIO.get('/someUrl', function(res) {});
+        wrapperIO.post('/someUrl', {
+          data: 'some body data'
+        }, {
+          'Content-Type': 'application/json'
+        }, function(res) {});
+        wrapperIO.put('/someUrl', function(res) {});
+        wrapperIO.delete('/someUrl', function(res) {});
+
+
 ## Idea
 
 ESWrapper will:
