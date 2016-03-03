@@ -63,6 +63,35 @@ And still have access with http:
             alert(data); // Hello World!
           });
         </script>
+        
+Need access to raw socket.io? No problem:
+
+        var express = require('express');
+        var ESWrapper = require('es-wrapper');
+        var wrapper = new ESWrapper(express());
+        var app = wrapper.app;
+        var io = wrapper.io;
+        
+        wrapper.listen(); // default port will be 80
+        
+        app.get('/', function(req, res) {
+          res.sendfile(__dirname + '/index.html');
+        });
+        
+        io.on('connection', function(socket) {
+          socket.emit('hello', { hello: 'world' });
+        });
+       
+Separate socket logic & http. Req will have `isSocket: true` value and `socketIO` object witch is socket.io connected socket. Also req.connection is same as `socketIO`.
+ 
+        app.delete('/socketIOtest', function(req, res) {
+          if (req.isSocket) { // req.isSocket is always true for socket requests
+            req.socketIO.emit('extra', 200); // req.socketIO is socket received on connection
+            req.connection.emit('extra', 200); // same here
+          }
+          res.sendStatus(200);
+        });
+
 
 ## Idea
 

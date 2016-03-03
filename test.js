@@ -37,8 +37,16 @@ app.put('/status', function(req, res) {
   res.status(201).end('ok');
 });
 
+app.delete('/socketIOtest', function(req, res) {
+  if (req.isSocket) { // req.isSocket is always true for socket requests
+    req.socketIO.emit('extra', 200); // req.socketIO is socket received on connection
+    req.connection.emit('extra', 200); // same here
+  }
+  res.end('bar');
+});
 
-console.log(`->Server listening on port:${PORT}`);
+
+console.log(`-> Server listening on port:${PORT}`);
 
 
 var socketClient = new SocketClient(`http://localhost:${PORT}`);
@@ -72,10 +80,22 @@ socketClient.on('connect', function() {
     body: {}
   });
 
+  socketClient.emit('request', {
+    path: '/socketIOtest',
+    method: 'DELETE',
+    headers: {},
+    body: {}
+  });
+
   socketClient.on('response', (res) => {
     console.log('[socket] Got response: ', res.body, res.statusCode);
     console.assert(res.statusCode === 200 || res.statusCode === 201);
     console.assert(res.body === 'bar' || res.body === 'biz' || res.body === 'ok');
+  });
+
+  socketClient.on('extra', (status) => {
+    console.log('[socket] Got extra: ', status);
+    console.assert(status === 200);
   });
 
 
