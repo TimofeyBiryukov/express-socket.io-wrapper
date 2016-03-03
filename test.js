@@ -5,14 +5,18 @@ var ESWrapper = require('./index');
 
 var request = require('request');
 var SocketClient = require('socket.io-client');
+var IOFactory = require('./client/io.js');
 
 var PORT = 1334;
 
 var app = express();
-new ESWrapper(app).listen(PORT);
+var wrapper = new ESWrapper(app);
+wrapper.listen(PORT);
+
+console.log(`-> Server listening on port:${PORT}`);
 
 
-app.use(function(req, res, next) {
+wrapper.app.use(function(req, res, next) {
   req.param['foo'] = 'bar';
   next();
 });
@@ -38,15 +42,16 @@ app.put('/status', function(req, res) {
 });
 
 app.delete('/socketIOtest', function(req, res) {
-  if (req.isSocket) { // req.isSocket is always true for socket requests
-    req.socketIO.emit('extra', 200); // req.socketIO is socket received on connection
-    req.connection.emit('extra', 200); // same here
+  if (req.isSocket) {
+    req.socketIO.emit('extra', 200);
+    req.connection.emit('extra', 200);
   }
   res.end('bar');
 });
 
-
-console.log(`-> Server listening on port:${PORT}`);
+wrapper.io.on('connection', function() {
+  console.log('--> Connection available through wrapper');
+});
 
 
 var socketClient = new SocketClient(`http://localhost:${PORT}`);
@@ -54,6 +59,15 @@ socketClient.on('connect', function() {
 
   console.log('--> Client Connected');
   console.log(' ');
+
+
+  var io = new IOFactory(socketClient);
+
+  io.get('/foo?name=tim&age=23', function(res) {
+    console.log('[socket] Got response: ', res.body, res.statusCode);
+    console.assert(res.statusCode === 200);
+    console.assert(res.body === 'bar');
+  });
 
 
   /**
