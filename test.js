@@ -69,6 +69,24 @@ socketClient.on('connect', function() {
     console.assert(res.body === 'bar');
   });
 
+  io.post('/fiz', function(res) {
+    console.log('[socket] Got response: ', res.body, res.statusCode);
+    console.assert(res.statusCode === 200);
+    console.assert(res.body === 'biz');
+  });
+
+  io.put('/status', function(res) {
+    console.log('[socket] Got response: ', res.body, res.statusCode);
+    console.assert(res.statusCode === 201);
+    console.assert(res.body === 'ok');
+  });
+
+  io.delete('/socketIOtest', function(res) {
+    console.log('[socket] Got response: ', res.body, res.statusCode);
+    console.assert(res.statusCode === 200);
+    console.assert(res.body === 'bar');
+  });
+
 
   /**
    * Socket tests
@@ -102,9 +120,11 @@ socketClient.on('connect', function() {
   });
 
   socketClient.on('response', (res) => {
-    console.log('[socket] Got response: ', res.body, res.statusCode);
-    console.assert(res.statusCode === 200 || res.statusCode === 201);
-    console.assert(res.body === 'bar' || res.body === 'biz' || res.body === 'ok');
+    if (!res.id) {
+      console.log('[socket] Got response: ', res.body, res.statusCode);
+      console.assert(res.statusCode === 200 || res.statusCode === 201);
+      console.assert(res.body === 'bar' || res.body === 'biz' || res.body === 'ok');
+    }
   });
 
   socketClient.on('extra', (status) => {
@@ -120,12 +140,20 @@ socketClient.on('connect', function() {
     if (err) {
       throw err;
     }
-
     console.log('[http] Got response: ', body, res.statusCode);
-
     console.assert(res.statusCode === 200);
     console.assert(res.body === 'bar');
   });
+
+  request.del('http://localhost:1334/socketIOtest', function(err, res, body) {
+    if (err) {
+      throw err;
+    }
+    console.log('[http] Got response: ', body, res.statusCode);
+    console.assert(res.statusCode === 200);
+    console.assert(res.body === 'bar');
+  });
+
 
 });
 

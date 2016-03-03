@@ -17,6 +17,12 @@ function IOFactory(socketClient) {
 
   /**
    *
+   * @type {Function}
+   */
+  this._io = null;
+
+  /**
+   *
    * @type {Object}
    */
   this.__callbacks = {};
@@ -29,17 +35,19 @@ function IOFactory(socketClient) {
 /**
  *
  * @param {Object} socketClient
+ * @param {String=} opt_url
  */
-IOFactory.prototype.init = function(socketClient) {
+IOFactory.prototype.init = function(socketClient, opt_url) {
   var self = this;
 
   if (!socketClient && window && window.io) {
-    this._raw = window.io;
+    this._io = window.io;
   } else {
-    this._raw = socketClient;
+    this._io = socketClient;
   }
 
-  if (this._raw && this._raw.on) {
+  if (this._io && this._io.connect) {
+    this._raw = this._io.connect(opt_url);
     this._raw.on('response', function(res) {
       var id;
       if (res && res.id) {
@@ -72,15 +80,73 @@ IOFactory.prototype.request = function(options, cb) {
 /**
  *
  * @param {!String} path
+ * @param {Object=} opt_headers
  * @param {function} cb
  */
-IOFactory.prototype.get = function(path, cb) {
-  this.request({
+IOFactory.prototype.get = function(path, opt_headers, cb) {
+  var options = {
     path: path,
     method: 'GET',
     headers: {},
     body: {}
+  };
+  if (typeof opt_headers === 'function') {
+    cb = opt_headers;
+  } else {
+    options.headers = opt_headers;
+  }
+  this.request(options, cb);
+};
+
+
+/**
+ *
+ * @param {!String} path
+ * @param {*=} opt_body
+ * @param {Object=} opt_headers
+ * @param {function} cb
+ * @param {String=} opt_method
+ */
+IOFactory.prototype.post =
+    function(path, opt_body, opt_headers, cb, opt_method) {
+  if (typeof opt_body === 'function') {
+    cb = opt_body;
+    opt_body = null;
+  }
+
+  if (typeof opt_headers === 'function') {
+    cb = opt_headers;
+    opt_headers = null;
+  }
+
+  this.request({
+    path: path,
+    method: opt_method || 'POST',
+    headers: opt_headers || {},
+    body: opt_body || {}
   }, cb);
+};
+
+
+/**
+ * @param {!String} path
+ * @param {*=} opt_body
+ * @param {Object=} opt_headers
+ * @param {function} cb
+ */
+IOFactory.prototype.put = function(path, opt_body, opt_headers, cb) {
+  this.post(path, opt_body, opt_headers, cb, 'PUT');
+};
+
+
+/**
+ * @param {!String} path
+ * @param {*=} opt_body
+ * @param {Object=} opt_headers
+ * @param {function} cb
+ */
+IOFactory.prototype.delete = function(path, opt_body, opt_headers, cb) {
+  this.post(path, opt_body, opt_headers, cb, 'delete');
 };
 
 
