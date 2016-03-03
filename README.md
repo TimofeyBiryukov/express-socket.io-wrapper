@@ -108,7 +108,6 @@ ESWrapper will:
 ## TODO
 
 * common sessions
-* browser & node clients
 * support for bodyParser
 
 ## Credits
