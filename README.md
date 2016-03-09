@@ -99,15 +99,17 @@ Another alternative is to use wrapper.client.io.js. It is small wrapper to provi
 
 > wrapper.client.io.js can be used both in node.js and browser
 
-<!--node:-->
+node:
 
-<!--var ESWrapper = require('es-wrapper');-->
-<!--var wrapperClient = ESWrapper.IOFactory;-->
-<!--var SocketClient = require('socket.io-client');-->
+        var ESWrapper = require('es-wrapper');
+        var wrapperClient = ESWrapper.IOFactory;
+        var SocketClient = require('socket.io-client');
+        
+        var io = new IOFactory(SocketClient);
 
-<!--var io = new IOFactory(SocketClient);-->
+io (browser): 
 
-<!--io.-->
+> Don't forget to grab wrapper.client.io.js from repo root express-socket.io-wrapper/client/io.js and include it in your page however you like. 
  
         var wrapperIO = new IOFactory();
         
@@ -119,6 +121,79 @@ Another alternative is to use wrapper.client.io.js. It is small wrapper to provi
         }, function(res) {});
         wrapperIO.put('/someUrl', function(res) {});
         wrapperIO.delete('/someUrl', function(res) {});
+        
+
+<a name="IOFactory"></a>
+### new IOFactory(socketClient)
+
+| Param | Type |
+| --- | --- |
+| socketClient | <code>Object</code> |
+ 
+> socketClient is optional, if using in browser and socektClient is not provided, IOFactory will look for global `io` object 
+
+<a name="IOFactory+init"></a>
+### ioFactory.init(socketClient, [opt_url])
+**Kind**: instance method of <code>[IOFactory](#IOFactory)</code>  
+
+| Param | Type |
+| --- | --- |
+| socketClient | <code>Object</code> | 
+| [opt_url] | <code>String</code> | 
+
+<a name="IOFactory+request"></a>
+### ioFactory.request(options, cb)
+**Kind**: instance method of <code>[IOFactory](#IOFactory)</code>  
+
+| Param | Type |
+| --- | --- |
+| options | <code>Object</code> | 
+| cb | <code>function</code> | 
+
+<a name="IOFactory+get"></a>
+### ioFactory.get(path, [opt_headers], cb)
+**Kind**: instance method of <code>[IOFactory](#IOFactory)</code>  
+
+| Param | Type |
+| --- | --- |
+| path | <code>String</code> | 
+| [opt_headers] | <code>Object</code> | 
+| cb | <code>function</code> | 
+
+<a name="IOFactory+post"></a>
+### ioFactory.post(path, [opt_body], [opt_headers], cb, [opt_method])
+**Kind**: instance method of <code>[IOFactory](#IOFactory)</code>  
+
+| Param | Type |
+| --- | --- |
+| path | <code>String</code> | 
+| [opt_body] | <code>\*</code> | 
+| [opt_headers] | <code>Object</code> | 
+| cb | <code>function</code> | 
+| [opt_method] | <code>String</code> | 
+
+<a name="IOFactory+put"></a>
+### ioFactory.put(path, [opt_body], [opt_headers], cb)
+**Kind**: instance method of <code>[IOFactory](#IOFactory)</code>  
+
+| Param | Type |
+| --- | --- |
+| path | <code>String</code> | 
+| [opt_body] | <code>\*</code> | 
+| [opt_headers] | <code>Object</code> | 
+| cb | <code>function</code> | 
+
+<a name="IOFactory+delete"></a>
+### ioFactory.delete(path, [opt_body], [opt_headers], cb)
+**Kind**: instance method of <code>[IOFactory](#IOFactory)</code>  
+
+| Param | Type |
+| --- | --- |
+| path | <code>String</code> | 
+| [opt_body] | <code>\*</code> | 
+| [opt_headers] | <code>Object</code> | 
+| cb | <code>function</code> | 
+
 
 
 ## Idea
