@@ -49,6 +49,14 @@ app.delete('/socketIOtest', function(req, res) {
   res.end('bar');
 });
 
+app.get('/cookie', function(req, res) {
+  var cookie = res.cookie('mycookie', '1');
+  console.assert(res.headers.cookie === cookie);
+  console.assert(res.socketIO.handshake.cookie === cookie);
+  res.status(201);
+  res.end(cookie);
+});
+
 wrapper.io.on('connection', function() {
   console.log('--> Connection available through wrapper');
 });
@@ -85,6 +93,11 @@ socketClient.on('connect', function() {
     console.log('[socket] Got response: ', res.body, res.statusCode);
     console.assert(res.statusCode === 200);
     console.assert(res.body === 'bar');
+  });
+
+  io.get('/cookie', function(res) {
+    console.log('[socket] Got response: ', res.body, res.statusCode);
+    console.assert(res.statusCode === 201);
   });
 
 

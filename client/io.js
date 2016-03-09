@@ -163,12 +163,9 @@ IOFactory.prototype.__generateID = function() {
   return id;
 };
 
-
-if (module && module.exports) {
-  /**
-   * @type {IOFactory}
-   */
+try {
   module.exports = IOFactory;
-} else {
+} catch (err) {
+  // we are in a browser most probably
   io = new IOFactory();
 }
