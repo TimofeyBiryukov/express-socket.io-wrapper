@@ -135,8 +135,8 @@ socketClient.on('connect', function() {
   socketClient.on('response', (res) => {
     if (!res.id) {
       console.log('[socket] Got response: ', res.body, res.statusCode);
-      console.assert(res.statusCode === 200 || res.statusCode === 201);
-      console.assert(res.body === 'bar' || res.body === 'biz' || res.body === 'ok');
+      //console.assert(res.statusCode === 200 || res.statusCode === 201);
+      //console.assert(res.body === 'bar' || res.body === 'biz' || res.body === 'ok');
     }
   });
 
