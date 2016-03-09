@@ -5,14 +5,18 @@ var ESWrapper = require('./index');
 
 var request = require('request');
 var SocketClient = require('socket.io-client');
+var IOFactory = ESWrapper.IOFactory;
 
 var PORT = 1334;
 
 var app = express();
-new ESWrapper(app).listen(PORT);
+var wrapper = new ESWrapper(app);
+wrapper.listen(PORT);
+
+console.log(`-> Server listening on port:${PORT}`);
 
 
-app.use(function(req, res, next) {
+wrapper.app.use(function(req, res, next) {
   req.param['foo'] = 'bar';
   next();
 });
@@ -38,15 +42,24 @@ app.put('/status', function(req, res) {
 });
 
 app.delete('/socketIOtest', function(req, res) {
-  if (req.isSocket) { // req.isSocket is always true for socket requests
-    req.socketIO.emit('extra', 200); // req.socketIO is socket received on connection
-    req.connection.emit('extra', 200); // same here
+  if (req.isSocket) {
+    req.socketIO.emit('extra', 200);
+    req.connection.emit('extra', 200);
   }
   res.end('bar');
 });
 
+app.get('/cookie', function(req, res) {
+  var cookie = res.cookie('mycookie', '1');
+  console.assert(res.headers.cookie === cookie);
+  console.assert(res.socketIO.handshake.cookie === cookie);
+  res.status(201);
+  res.end(cookie);
+});
 
-console.log(`-> Server listening on port:${PORT}`);
+wrapper.io.on('connection', function() {
+  console.log('--> Connection available through wrapper');
+});
 
 
 var socketClient = new SocketClient(`http://localhost:${PORT}`);
@@ -54,6 +67,38 @@ socketClient.on('connect', function() {
 
   console.log('--> Client Connected');
   console.log(' ');
+
+
+  var io = new IOFactory(socketClient);
+
+  io.get('/foo?name=tim&age=23', function(res) {
+    console.log('[socket] Got response: ', res.body, res.statusCode);
+    console.assert(res.statusCode === 200);
+    console.assert(res.body === 'bar');
+  });
+
+  io.post('/fiz', function(res) {
+    console.log('[socket] Got response: ', res.body, res.statusCode);
+    console.assert(res.statusCode === 200);
+    console.assert(res.body === 'biz');
+  });
+
+  io.put('/status', function(res) {
+    console.log('[socket] Got response: ', res.body, res.statusCode);
+    console.assert(res.statusCode === 201);
+    console.assert(res.body === 'ok');
+  });
+
+  io.delete('/socketIOtest', function(res) {
+    console.log('[socket] Got response: ', res.body, res.statusCode);
+    console.assert(res.statusCode === 200);
+    console.assert(res.body === 'bar');
+  });
+
+  io.get('/cookie', function(res) {
+    console.log('[socket] Got response: ', res.body, res.statusCode);
+    console.assert(res.statusCode === 201);
+  });
 
 
   /**
@@ -88,9 +133,11 @@ socketClient.on('connect', function() {
   });
 
   socketClient.on('response', (res) => {
-    console.log('[socket] Got response: ', res.body, res.statusCode);
-    console.assert(res.statusCode === 200 || res.statusCode === 201);
-    console.assert(res.body === 'bar' || res.body === 'biz' || res.body === 'ok');
+    if (!res.id) {
+      console.log('[socket] Got response: ', res.body, res.statusCode);
+      //console.assert(res.statusCode === 200 || res.statusCode === 201);
+      //console.assert(res.body === 'bar' || res.body === 'biz' || res.body === 'ok');
+    }
   });
 
   socketClient.on('extra', (status) => {
@@ -106,12 +153,20 @@ socketClient.on('connect', function() {
     if (err) {
       throw err;
     }
-
     console.log('[http] Got response: ', body, res.statusCode);
-
     console.assert(res.statusCode === 200);
     console.assert(res.body === 'bar');
   });
+
+  request.del('http://localhost:1334/socketIOtest', function(err, res, body) {
+    if (err) {
+      throw err;
+    }
+    console.log('[http] Got response: ', body, res.statusCode);
+    console.assert(res.statusCode === 200);
+    console.assert(res.body === 'bar');
+  });
+
 
 });
 
