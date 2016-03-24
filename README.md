@@ -211,7 +211,6 @@ ESWrapper will:
 ## TODO
 
 * common sessions
-* support for bodyParser
 
 ## Credits
 

@@ -5,6 +5,7 @@ var ESWrapper = require('./index');
 
 var request = require('request');
 var SocketClient = require('socket.io-client');
+var BodyParser = require('body-parser');
 var IOFactory = ESWrapper.IOFactory;
 
 var PORT = 1334;
@@ -15,6 +16,7 @@ wrapper.listen(PORT);
 
 console.log(`-> Server listening on port:${PORT}`);
 
+wrapper.app.use(BodyParser.json());
 
 wrapper.app.use(function(req, res, next) {
   req.param['foo'] = 'bar';
@@ -55,6 +57,10 @@ app.get('/cookie', function(req, res) {
   console.assert(res.socketIO.handshake.cookie === cookie);
   res.status(201);
   res.end(cookie);
+});
+
+app.post('/bodyTest', function(req, res) {
+  res.end(req.body);
 });
 
 wrapper.io.on('connection', function() {
@@ -98,6 +104,13 @@ socketClient.on('connect', function() {
   io.get('/cookie', function(res) {
     console.log('[socket] Got response: ', res.body, res.statusCode);
     console.assert(res.statusCode === 201);
+  });
+
+  io.post('/bodyTest', {
+    'foo': 'bar'
+  }, function(res) {
+    console.log('[socket] Got response: ', res.body, res.statusCode);
+    console.assert(res.body.foo === 'bar');
   });
 
 
