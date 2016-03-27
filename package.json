@@ -1,12 +1,11 @@
 {
   "name": "es-wrapper",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "ESWrapper makes your express.js powered API accessible through real-time sockets with Socket.io.",
   "main": "index.js",
   "scripts": {
     "test": "node test"
   },
-  "author": "Timofey Biryukov <timofeybiryukov@gmail.com>",
   "devDependencies": {
     "body-parser": "^1.15.0",
     "express": "4.13.4",
@@ -15,5 +14,16 @@
   },
   "dependencies": {
     "socket.io": "1.4.5"
-  }
+  },
+  "author": "Timofey Biryukov <timofeybiryukov@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TimofeyBiryukov/express-socket.io-wrapper.git"
+  },
+  "keywords": [
+    "express",
+    "socket.io",
+    "wrapper"
+  ],
+  "homepage": "https://github.com/TimofeyBiryukov/express-socket.io-wrapper"
 }
