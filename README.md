@@ -3,7 +3,11 @@
 # Express Socket.io Wrapper
 #### ESWrapper for short
 
+![logo image](./logo.png)
+
 ESWrapper makes your express.js powered API accessible through real-time sockets with Socket.io.
+
+[Disclaimer: remember, this lib is in the TEST mode right now (not fully production tested)]
 
 ## Installation
 
