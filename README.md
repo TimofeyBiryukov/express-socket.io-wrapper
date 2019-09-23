@@ -1,4 +1,3 @@
-i changed . by ALISHER
 
 # Express Socket.io Wrapper
 #### ESWrapper for short
