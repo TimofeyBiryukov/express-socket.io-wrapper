@@ -14,11 +14,11 @@ ESWrapper makes your express.js powered API accessible through real-time sockets
 In console:
 
     npm install es-wrapper
-  
+
 In code:
 
     require('es-wrapper');
- 
+
 ## Usage
 
 Create your standard express.js application, require `es-wrapper`, just instead of doing `app.listen(PORT);` do `new ESWrapper(app).listen(PORT);`.
@@ -27,14 +27,14 @@ Create your standard express.js application, require `es-wrapper`, just instead 
 
         var app = require('express')();
         var ESWrapper = require('es-wrapper');
-        
+
         // app.listen(8080);
         new ESWrapper(app).listen(8080);
-        
+
         app.get('/', function (req, res) {
           res.sendfile(__dirname + '/index.html');
         });
-        
+
         app.get('/sayHi', function (req, res) {
           res.end('Hello World!');
         });
@@ -45,29 +45,29 @@ index.html:
         <script src="/socket.io/socket.io.js"></script>
         <script>
           var socket = io.connect('http://localhost:8080');
-        
+
           socket.emit('request', {
             path: '/sayHi',
             method: 'get',
             headers: {},
             body: {}
           });
-        
+
           socket.on('response', function (res) {
             alert(res.body); // Hello World!
           });
-        
+
         </script>
-        
+
 And still have access with http:
-    
+
         <script src="http://code.jquery.com/jquery-1.12.1.min.js"></script>
         <script>
           $.get('http://localhost:8080/sayHi', function(data) {
             alert(data); // Hello World!
           });
         </script>
-        
+
 Need access to raw socket.io? No problem:
 
         var express = require('express');
@@ -75,19 +75,19 @@ Need access to raw socket.io? No problem:
         var wrapper = new ESWrapper(express());
         var app = wrapper.app;
         var io = wrapper.io;
-        
+
         wrapper.listen(); // default port will be 80
-        
+
         app.get('/', function(req, res) {
           res.sendfile(__dirname + '/index.html');
         });
-        
+
         io.on('connection', function(socket) {
           socket.emit('hello', { hello: 'world' });
         });
-       
+
 Separate socket logic & http. Req will have `isSocket: true` value and `socketIO` object witch is socket.io connected socket. Also req.connection is same as `socketIO`.
- 
+
         app.delete('/socketIOtest', function(req, res) {
           if (req.isSocket) { // req.isSocket is always true for socket requests
             req.socketIO.emit('extra', 200); // req.socketIO is socket received on connection
@@ -108,15 +108,15 @@ node:
         var ESWrapper = require('es-wrapper');
         var wrapperClient = ESWrapper.IOFactory;
         var SocketClient = require('socket.io-client');
-        
+
         var io = new IOFactory(SocketClient);
 
-io (browser): 
+io (browser):
 
-> Don't forget to grab wrapper.client.io.js from repo root express-socket.io-wrapper/client/io.js and include it in your page however you like. 
- 
+> Don't forget to grab wrapper.client.io.js from repo root express-socket.io-wrapper/client/io.js and include it in your page however you like.
+
         var wrapperIO = new IOFactory();
-        
+
         wrapperIO.get('/someUrl', function(res) {});
         wrapperIO.post('/someUrl', {
           data: 'some body data'
@@ -125,7 +125,7 @@ io (browser):
         }, function(res) {});
         wrapperIO.put('/someUrl', function(res) {});
         wrapperIO.delete('/someUrl', function(res) {});
-        
+
 
 <a name="IOFactory"></a>
 ### new IOFactory(socketClient)
@@ -133,8 +133,8 @@ io (browser):
 | Param | Type |
 | --- | --- |
 | socketClient | <code>Object</code> |
- 
-> socketClient is optional, if using in browser and socektClient is not provided, IOFactory will look for global `io` object 
+
+> socketClient is optional, if using in browser and socektClient is not provided, IOFactory will look for global `io` object
 
 <a name="IOFactory+init"></a>
 ### ioFactory.init(socketClient, [opt_url])
@@ -142,8 +142,8 @@ io (browser):
 
 | Param | Type |
 | --- | --- |
-| socketClient | <code>Object</code> | 
-| [opt_url] | <code>String</code> | 
+| socketClient | <code>Object</code> |
+| [opt_url] | <code>String</code> |
 
 <a name="IOFactory+request"></a>
 ### ioFactory.request(options, cb)
@@ -151,8 +151,8 @@ io (browser):
 
 | Param | Type |
 | --- | --- |
-| options | <code>Object</code> | 
-| cb | <code>function</code> | 
+| options | <code>Object</code> |
+| cb | <code>function</code> |
 
 <a name="IOFactory+get"></a>
 ### ioFactory.get(path, [opt_headers], cb)
@@ -160,9 +160,9 @@ io (browser):
 
 | Param | Type |
 | --- | --- |
-| path | <code>String</code> | 
-| [opt_headers] | <code>Object</code> | 
-| cb | <code>function</code> | 
+| path | <code>String</code> |
+| [opt_headers] | <code>Object</code> |
+| cb | <code>function</code> |
 
 <a name="IOFactory+post"></a>
 ### ioFactory.post(path, [opt_body], [opt_headers], cb, [opt_method])
@@ -170,11 +170,11 @@ io (browser):
 
 | Param | Type |
 | --- | --- |
-| path | <code>String</code> | 
-| [opt_body] | <code>\*</code> | 
-| [opt_headers] | <code>Object</code> | 
-| cb | <code>function</code> | 
-| [opt_method] | <code>String</code> | 
+| path | <code>String</code> |
+| [opt_body] | <code>\*</code> |
+| [opt_headers] | <code>Object</code> |
+| cb | <code>function</code> |
+| [opt_method] | <code>String</code> |
 
 <a name="IOFactory+put"></a>
 ### ioFactory.put(path, [opt_body], [opt_headers], cb)
@@ -182,10 +182,10 @@ io (browser):
 
 | Param | Type |
 | --- | --- |
-| path | <code>String</code> | 
-| [opt_body] | <code>\*</code> | 
-| [opt_headers] | <code>Object</code> | 
-| cb | <code>function</code> | 
+| path | <code>String</code> |
+| [opt_body] | <code>\*</code> |
+| [opt_headers] | <code>Object</code> |
+| cb | <code>function</code> |
 
 <a name="IOFactory+delete"></a>
 ### ioFactory.delete(path, [opt_body], [opt_headers], cb)
@@ -193,10 +193,10 @@ io (browser):
 
 | Param | Type |
 | --- | --- |
-| path | <code>String</code> | 
-| [opt_body] | <code>\*</code> | 
-| [opt_headers] | <code>Object</code> | 
-| cb | <code>function</code> | 
+| path | <code>String</code> |
+| [opt_body] | <code>\*</code> |
+| [opt_headers] | <code>Object</code> |
+| cb | <code>function</code> |
 
 
 
@@ -222,3 +222,4 @@ This was definitely inspired by [sails.js](http://sailsjs.org) a great MVC frame
 
 
 ### Have a nice Hacking
+я разобрался и сделал:)
