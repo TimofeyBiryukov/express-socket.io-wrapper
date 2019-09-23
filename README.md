@@ -218,7 +218,7 @@ ESWrapper will:
 
 ## Credits
 
-This was definitely expired by [sails.js](http://sailsjs.org) a great MVC framework, if you are looking for "all-in-one" solution, you should check them out.
+This was definitely inspired by [sails.js](http://sailsjs.org) a great MVC framework, if you are looking for "all-in-one" solution, you should check them out.
 
 
 ### Have a nice Hacking
